@@ -223,7 +223,7 @@
     </ResourceCompile>
     <PostBuildEvent>
       <Message>Creating new Version file in inc/</Message>
-      <Command>$(OutDir)CreateVersion.exe $(ProjectDir)..\inc\gen-versioninfo.h</Command>
+      <Command>"$(OutDir)CreateVersion.exe" "$(ProjectDir)..\inc\gen-versioninfo.h"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_STAT|x64'">

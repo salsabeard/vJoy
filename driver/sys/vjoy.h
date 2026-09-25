@@ -1666,6 +1666,14 @@ GetDeviceCount(
 );
 
 NTSTATUS
+GetCustomDeviceName(
+    PWDFDEVICE_INIT DeviceInit,
+    LONG SerialNumber,
+    PWCHAR NameBuffer,
+    ULONG NameBufferSize
+);
+
+NTSTATUS
 GetHwKeyName(
     PWDFDEVICE_INIT  DeviceInit,
     PWCHAR HwKeyName

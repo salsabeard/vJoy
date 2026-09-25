@@ -214,6 +214,8 @@ Return Value:
     WDFIOTARGET					ioTarget;
     PFFB_QUEUE_EXTENSION		queueContext = NULL;
     int 						i;
+	// Variables for custom device naming
+	WCHAR						CustomDeviceName[128];
 
     UNREFERENCED_PARAMETER(Driver);
 
@@ -286,6 +288,24 @@ Return Value:
         TraceEvents(TRACE_LEVEL_WARNING, DBG_PNP, "vJoyEvtDeviceAdd: WdfPdoInitAssignInstanceID failed with status code 0x%x\n", status);
         LogEventWithStatus(ERRLOG_DEVICE_FAILED, L"WdfPdoInitAssignInstanceID", NULL, status);
     }
+	
+	//  Call Site For Local Custom Naming Variables
+	{
+    NTSTATUS nameStatus;
+    RtlZeroMemory(CustomDeviceName, sizeof(CustomDeviceName));
+
+    nameStatus = GetCustomDeviceName(DeviceInit, SerialNumber, CustomDeviceName, sizeof(CustomDeviceName));
+
+    if (!NT_SUCCESS(nameStatus) || CustomDeviceName[0] == L'\0') {
+        RtlStringCbPrintfW(CustomDeviceName, sizeof(CustomDeviceName), L"vJoy Device %02d", SerialNumber);
+    }
+
+    status = WdfPdoInitAddDeviceText(DeviceInit, CustomDeviceName, L"", 0x0409);
+    if (!NT_SUCCESS(status)) {
+        TraceEvents(TRACE_LEVEL_WARNING, DBG_PNP, "vJoyEvtDeviceAdd: WdfPdoInitAddDeviceText failed with status code 0x%x\n", status);
+    }
+    WdfPdoInitSetDefaultLocale(DeviceInit, 0x0409);
+}
 
     //WdfDeviceInitAssignSDDLString(DeviceInit,
     //                                       &SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_R_RES_R);
@@ -932,6 +952,50 @@ UCHAR GetDeviceCount(PWSTR RegistryPathStr)
     WdfRegistryClose(Key);
     WdfRegistryClose(SubKey);
     return (UCHAR)DeviceCount;
+}
+
+// New function for getting custom device names
+NTSTATUS GetCustomDeviceName(
+    PWDFDEVICE_INIT DeviceInit,
+    LONG SerialNumber,
+    PWCHAR NameBuffer,
+    ULONG NameBufferSize
+)
+{
+    NTSTATUS status;
+    WDFKEY ParamsKey;
+    DECLARE_UNICODE_STRING_SIZE(ValueName, 32);
+    UNICODE_STRING OutString;
+
+    // Build a value name like "DeviceName01", "DeviceName02", etc.
+    status = RtlUnicodeStringPrintf(&ValueName, L"DeviceName%02d", SerialNumber);
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    // Open the driver's Device Parameters registry key for this device instance
+    status = WdfFdoInitOpenRegistryKey(
+        DeviceInit,
+        PLUGPLAY_REGKEY_DEVICE,
+        GENERIC_READ,
+        WDF_NO_OBJECT_ATTRIBUTES,
+        &ParamsKey
+    );
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    // Prepare the output UNICODE_STRING wrapper around the caller's buffer
+    OutString.Buffer = NameBuffer;
+    OutString.Length = 0;
+    OutString.MaximumLength = (USHORT)NameBufferSize;
+
+    // Try to read the custom name string value from the registry
+    status = WdfRegistryQueryUnicodeString(ParamsKey, &ValueName, NULL, &OutString);
+
+    WdfRegistryClose(ParamsKey);
+
+    return status;
 }
 
 
