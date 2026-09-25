@@ -11,6 +11,7 @@
 Signature="$CHICAGO$"
 Class=HIDClass
 ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+PnpLockDown=1
 Provider=%VENDOR%
 ;LayoutFile=layout.inf
 DriverVer=01/10/2007,1.0.0.0
