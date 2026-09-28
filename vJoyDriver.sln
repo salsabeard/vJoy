@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateVersion", "CreateVers
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CreateVersion", "CreateVersion", "{946BFD6D-D144-4177-8721-5C3D2F721813}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vJoyVhf", "driver\vJoyVhf\vJoyVhf.vcxproj", "{BF65B86B-4C2F-3666-E6DE-1494BACE7566}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -49,6 +51,12 @@ Global
 		{9EB6193B-FCC1-450F-9B1F-B64E8B380940}.Debug|x64.Build.0 = Debug|x64
 		{9EB6193B-FCC1-450F-9B1F-B64E8B380940}.Release|x64.ActiveCfg = Release|x64
 		{9EB6193B-FCC1-450F-9B1F-B64E8B380940}.Release|x64.Build.0 = Release|x64
+		{BF65B86B-4C2F-3666-E6DE-1494BACE7566}.Debug|x64.ActiveCfg = Debug|x64
+		{BF65B86B-4C2F-3666-E6DE-1494BACE7566}.Debug|x64.Build.0 = Debug|x64
+		{BF65B86B-4C2F-3666-E6DE-1494BACE7566}.Debug|x64.Deploy.0 = Debug|x64
+		{BF65B86B-4C2F-3666-E6DE-1494BACE7566}.Release|x64.ActiveCfg = Release|x64
+		{BF65B86B-4C2F-3666-E6DE-1494BACE7566}.Release|x64.Build.0 = Release|x64
+		{BF65B86B-4C2F-3666-E6DE-1494BACE7566}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
